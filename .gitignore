@@ -1,3 +1,6 @@
+### Application ###
+application_data
+
 ### Maven ###
 target/
 pom.xml.tag

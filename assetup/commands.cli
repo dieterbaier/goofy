@@ -1,4 +1,15 @@
+batch
+
 /subsystem=datasources/data-source="GoofyDS" \
         :add( jndi-name="java:jboss/datasources/GoofyDS", \
               driver-name="h2", \
-              connection-url="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1" )
+              connection-url="jdbc:h2:tcp://192.168.99.100:1521/goofy-db;DB_CLOSE_DELAY=-1" )
+
+/subsystem=datasources/data-source="CamundaDS" \
+        :add( jndi-name="java:jboss/datasources/CamundaDS", \
+              driver-name="h2", \
+              connection-url="jdbc:h2:tcp://192.168.99.100:1521/camunda-db;DB_CLOSE_DELAY=-1", \
+              user-name=camunda, \
+              password=camunda )
+
+run-batch

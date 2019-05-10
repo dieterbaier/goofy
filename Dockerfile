@@ -9,4 +9,5 @@ FROM goofy_as
 EXPOSE 9990
 ARG APP_VERSION
 COPY packaging/target/packaging-${APP_VERSION}.war $JBOSS_HOME/standalone/deployments/
+
 CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]

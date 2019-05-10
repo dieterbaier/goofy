@@ -6,34 +6,26 @@ To not having to have a AS installed on the machine, there is a Dockerfile which
 ## Build the project
 Just start the `mvnw[.cmd] clean install`, which does the build with the delivered maven-wrapper.
 
->NOTE:
->
->If just want to run the application, you don't have to build it first! Just do what is described in the section _Running the project_.
-
 ## Running the project
-Just start the deliverd `deployAndStartApplication.sh', which does the following:
-* Building the project with maven (clean, install)
-* Stopping a possibly running docker container with the name `goofy_runtime`
-* Building a new docker container with the name `goofy_runtime`
-* Starting the new docker container with the name `goofy_runtime`
+Run the command `docker-compose build && docker-compose up`. This will build the docker image for the goofy-application and then start three docker services:
 
-The container exposes two ports
+* a H2-DB-Server,
+* a Application-Server with the Camunda-WebApps installed and
+* a Application-Server with the goofy-application deployed
+
+The Camunda-WebApps as well as the goofy-application would share a BPM-Database which is located in the local-file system and managed by teh H2-DB-Server. There is another database managed by the H2-DB-Server: the application DB of the goofy-application.
+
+The container expose the following ports on the docker-machine
 * 8080 - for accessing the application (e.g. `<ip of your docker-machine>/:8080/goofy/index.xhtml`)
-* 9990 - for accessing the management-console of the underlying application-server (e.g. `<ip of your docker-machine>/:9990`) 
-
-To login to the AS-management-console use the userid `admin` with the password `admin`.
-
->NOTE:
->
->You can deploy the application to any application server to which you can deploy a `.war`-File.
->
->But please make sure, your application server is configured with the things you can find within the file `assetup/commands.cli`.
->
->You can try to configure your application server with the script `assetup/configureAs.sh` but you will probably have to modify the script to your dependencies.
->
->**Both files are designed four configuring a JBoss Wildfly Application-Server! But the `assetup/commands.cli` could give you a hint, what ressources the application needs to have configured within the application server**
+* 9990 - for accessing the management-console of the underlying application-server (e.g. `<ip of your docker-machine>/:9990`); login with user admin (PW: admin)
+* 8081 - for accessing the camunda-webapps (e.g. `<ip of your docker-machine>/:8081/camunda`); Login with user demo (PW: demo)
+* 9991 - for accessing the management-console of the underlying application-server (e.g. `<ip of your docker-machine>/:9991`); you want be able to login, since the admin-use is not configured on this machine
+* 1521 - for accessing the H2-DB-Server via JDBC
+*   81 - for accessing the H2-DB-User-Interface
 
 ## Docker
 The project delivers a `Dockerfile`to be able to build a docker-container on your machine, if you like to run the application within a docker container (which is the prefered way).
 
-The `Dockerfile` builds a Docker-Image with the name `goofy` and starts a container with the name `goofy_runtime`. The basis for the image is the `jboss/wildfly`. If you like to modify the names, feel free to modify the `Dockerfile`.
+The `Dockerfile` builds a Docker-Image with the name `brdietdidi/goofy` and starts a container with the name `goofy_runtime`. The basis for the image is the `jboss/wildfly`. If you like to modify the names, feel free to modify the `Dockerfile`.
+
+You should start the application with `docker-compose`, since with this way, all services will be started automatically.
